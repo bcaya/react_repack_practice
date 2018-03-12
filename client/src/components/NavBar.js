@@ -1,20 +1,50 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { isAuthenticated } from '../fakeAuth'; 
+import { NavLink, withRouter } from 'react-router-dom';
+import { isAuthenticated, logout } from '../fakeAuth';
 
 const styles = {
   active: {
     textDecoration: 'none',
     fontWeight: 'bold',
-    color: '#4dd0e1',
+    color: 'black',
   }
 }
 
 const additionalLinks = (history) => {
-  
+  if (isAuthenticated()) {
+    return (
+      <span>
+        <NavLink
+          activeStyle={styles.active}
+          to="/dashboard"
+        >
+          Dashboard
+        </NavLink>
+        {' '}
+        <a 
+          href="#"
+          onClick={ () => {
+            logout()
+            history.push("/login")
+          }}
+         >
+           Logout
+         </a>
+      </span>
+    )
+  } else {
+    return (
+      <NavLink
+        style={styles.active}
+        to="/login"
+      >
+        Login
+      </NavLink>
+    )
+  }
 }
 
-const NavBar = () => (
+const NavBar = ({ history }) => (
   <nav>
     <NavLink 
       exact
@@ -34,4 +64,4 @@ const NavBar = () => (
   </nav>
 )
 
-export default NavBar;
+export default withRouter(NavBar);
